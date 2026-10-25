@@ -19,7 +19,7 @@ degenerate neutrino states.
 massless and massive neutrinos, respectively. The second file allows to compute the stable limit of scenarios A1-A3, B1-B2 in
 `LCDMnu_dec_toNCDM.ini`, i.e. those with the same neutrino mass spectrum but in the absence of decays.
 
-The folder `CNB_calculations` contains Jupyter notebooks and auxiliary files that allow to reproduce the plots in [2510.15818](https://arxiv.org/abs/2510.15818). In addition, the notebook `plot_PSD_evolution.ipynb` allows to generate a gif showing the evolution of the phase-space distribution for the parent and daughter neutrinos.
+The folder `CNB_calculations` contains python scripts and auxiliary files that allow to reproduce the plots in [2510.15818](https://arxiv.org/abs/2510.15818). In addition, the notebook `plot_PSD_evolution.ipynb` allows to generate a gif showing the evolution of the phase-space distribution for the parent and daughter neutrinos.
 
 The folder `CONNECT_emulator` contains files relevant for the neural network emulators of various neutrino decay scenarios, which were developed using the [CONNECT](https://github.com/AarhusCosmology/connect_public) framework (Andreas Nygaard, Thomas Tram). In particular, it contains the trained emulators that were used to produce the main results of [2601.04312](https://arxiv.org/abs/2601.04312).
 
