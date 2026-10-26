@@ -55,6 +55,7 @@ public:
   ~NonColdDarkMatter();
   int background_ncdm_momenta(int n_ncdm, double z, short has_negative_nu_mass, double* n, double* rho, double* p, double* drho_dM, double* pseudo_p) const;
   int background_ncdm_momenta_deg(int n_ncdm, double deg, double z, double T_cmb, double* n, double* rho, double* p, double* drho_ddeg, double* pseudo_p) const;
+  int background_ncdm_momenta_sigma(int n_ncdm, double z, double* sigma) const; //GFA
   double GetOmega0() const;
   double GetNeff(double z,short has_ncdm_decay_dr_ncdm, short has_negative_nu_mass) const; //GFA
   double GetMassInElectronvolt(int n_ncdm) const;

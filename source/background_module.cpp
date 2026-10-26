@@ -581,6 +581,26 @@ int BackgroundModule::background_functions(double* pvecback_B, /* Vector contain
   /** - compute relativistic density to total density ratio */
   pvecback[index_bg_Omega_r_] = rho_r/rho_crit;
 
+
+  // GFA, compute here the free-streaming scale of NCDM species
+  if (pba->has_ncdm == _TRUE_) {
+    for(n_ncdm=0; n_ncdm<pba->N_ncdm; n_ncdm++){
+      double H = pvecback[index_bg_H_];
+      double w_ncdm = pvecback[index_bg_p_ncdm1_ + n_ncdm]/pvecback[index_bg_rho_ncdm1_ + n_ncdm];
+      double pseudo_p_ncdm = pvecback[index_bg_pseudo_p_ncdm1_ + n_ncdm];
+      double p_ncdm = pvecback[index_bg_p_ncdm1_ + n_ncdm];
+      double number_ncdm = pvecback[index_bg_number_ncdm1_ + n_ncdm];
+    //  double ca2_ncdm = w_ncdm*(5.-pseudo_p_ncdm/p_ncdm)/(3.*(1.+w_ncdm)); //formula only valid for free-streaming neutrinos, would require generalization for decaying neutrinos
+      double sigma_ncdm;
+      class_call(ncdm_->background_ncdm_momenta_sigma(n_ncdm,1./a_rel - 1., &sigma_ncdm),
+                 error_message_,
+                 error_message_);
+      double ca2_ncdm = sigma_ncdm; //alternative definition, velocity dispersion taken from eq. 8 in 1003.0942, in principle valid in all cases
+      pvecback[index_bg_kFS_ncdm1_ + n_ncdm] = sqrt(3./2.)*a*H/sqrt(ca2_ncdm);
+    }
+  }
+
+
   /** - compute other quantities in the exhaustive, redundant format */
   if (return_format == pba->long_info) {
 
@@ -763,7 +783,6 @@ int BackgroundModule::background_init() {
     }
   }
 
-
   /** - assign values to all indices in vectors of background quantities with background_indices()*/
   class_call(background_indices(),
              error_message_,
@@ -900,6 +919,9 @@ int BackgroundModule::background_indices() {
   class_define_index(index_bg_rho_ncdm1_, pba->has_ncdm, index_bg, pba->N_ncdm);
   class_define_index(index_bg_p_ncdm1_, pba->has_ncdm, index_bg, pba->N_ncdm);
   class_define_index(index_bg_pseudo_p_ncdm1_, pba->has_ncdm, index_bg, pba->N_ncdm);
+  // GFA
+  class_define_index(index_bg_kFS_ncdm1_, pba->has_ncdm, index_bg, pba->N_ncdm);
+
 
   /* - index for dcdm */
   class_define_index(index_bg_rho_dcdm_, pba->has_dcdm, index_bg, 1);
@@ -1855,7 +1877,8 @@ int BackgroundModule::background_output_titles(char titles[_MAXTITLESTRINGLENGTH
 // //         class_store_columntitle(titles,tmp,_TRUE_);
         }
       }
-
+  //    sprintf(tmp,"k_fs[%d] [h/Mpc]",n);
+  //    class_store_columntitle(titles,tmp,_TRUE_);
     }
   }
   class_store_columntitle(titles,"(.)rho_lambda",pba->has_lambda);
@@ -1928,7 +1951,7 @@ int BackgroundModule::background_output_data(int number_of_titles, double* data)
   // //         class_store_double(dataptr, pvecback[index_bg_dlnfdlnq_separate_ncdm_decay_dr1_ + ncdm_->decay_dr_map_[n].q_offset + i], _TRUE_, storeidx);
           }
         }
-
+    //    class_store_double(dataptr, pvecback[index_bg_kFS_ncdm1_+n]/pba->h, _TRUE_, storeidx); //GFA
       }
     }
     class_store_double(dataptr, pvecback[index_bg_rho_lambda_], pba->has_lambda, storeidx);

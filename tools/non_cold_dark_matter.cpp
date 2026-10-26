@@ -116,6 +116,14 @@ int NonColdDarkMatter::background_ncdm_distribution(void* pbadist, double q, dou
 
     *f0 = 1.0/pow(2*_PI_, 3)*(1./(exp(q - ksi) + 1.) + 1./(exp(q + ksi) + 1.));
 
+  // GFA, modified PSD taken from eqs. 2.8 and 3.2 in 1901.04352, it has larger average momentum than FD
+  //  double p0 = 1.201122;
+  //  double p1 = 1.099518*q - 1.304654;
+  //  double p2 = 0.537034*q*q - 2.300076*q + 1.332213;
+  //  double F1 = 0.92; double F2 = 1.06; // one can play with these values
+  //  double Norm = 5.682197/(6.825012 + 18.239415*F1 + 17.420046*F2); //to ensure same Neff as FD
+  //  *f0 = 2.0/pow(2*_PI_, 3)*(Norm/(exp(q) + 1.))*(p0+F1*p1+F2*p2);
+
     /**************************************************/
 
     /** This form is only appropriate for approximate studies, since in
@@ -984,6 +992,35 @@ int NonColdDarkMatter::background_ncdm_momenta_mass(int n_ncdm, double M, double
   if (p != NULL) *p *= factor2;
   if (drho_dM != NULL) *drho_dM *= factor2;
   if (pseudo_p != NULL) *pseudo_p *= factor2;
+
+  return _SUCCESS_;
+}
+
+//GFA, velocity dispersion, taken from eq. 8 in 1003.0942
+int NonColdDarkMatter::background_ncdm_momenta_sigma(int n_ncdm, double z, double* sigma) const {
+
+  double* qvec = q_ncdm_bg_[n_ncdm];
+  double* wvec = w_ncdm_bg_[n_ncdm];
+  double qsize = q_size_ncdm_bg_[n_ncdm];
+  double epsilon;
+  double M = M_ncdm_[n_ncdm];
+  /** - initialize quantities */
+  double norm = 0.;
+  *sigma = 0.;
+
+  /** - loop over momenta */
+  for (int index_q = 0; index_q < qsize; index_q++) {
+    /* squared momentum */
+    double q2 = qvec[index_q]*qvec[index_q];
+    /* energy */
+    epsilon = sqrt(q2 + M*M/(1. + z)/(1. + z));
+    /* integrand of the various quantities */
+    norm += q2*wvec[index_q];
+    *sigma += pow(q2/epsilon, 2)*wvec[index_q];
+  }
+
+  /** - adjust normalization */
+  *sigma *= 1/norm;
 
   return _SUCCESS_;
 }

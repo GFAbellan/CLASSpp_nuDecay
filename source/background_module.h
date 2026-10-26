@@ -55,6 +55,8 @@ public:
   int index_bg_rho_ncdm1_;     /**< energy density of first ncdm species (others contiguous) */
   int index_bg_p_ncdm1_;       /**< pressure of first ncdm species (others contiguous) */
   int index_bg_pseudo_p_ncdm1_;/**< another statistical momentum useful in ncdma approximation */
+  int index_bg_kFS_ncdm1_;     /**< GFA: free-streaming scale of first ncdm species (others contiguous) */
+
 
   int index_bg_rho_tot_;       /**< Total density */
   int index_bg_p_tot_;         /**< Total pressure */
