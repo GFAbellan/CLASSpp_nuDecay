@@ -34,7 +34,7 @@ print("")
 
 
 
-def compute_power_spectrum_new(delta_new): #Computes power spectrum for Delta_ell that are already q-averaged //NT
+def compute_power_spectrum_new(delta_new): #Computes power spectrum (eq. 2.33) for Delta_ell that are already q-averaged (eq. 2.34) //NT
     
     Cl_new1 = []
     for l in range(1, l_max + 1):
@@ -43,7 +43,7 @@ def compute_power_spectrum_new(delta_new): #Computes power spectrum for Delta_el
             d_lnk = lnk_values[k + 1] - lnk_values[k]
             delta_squared_midpoint = 0.5 * ( ((k_values[k]/k_pivot)**(ns-1))*delta_new[k][l]**2 + ((k_values[k+1]/k_pivot)**(ns-1))*delta_new[k + 1][l]**2 )
             integral_value += delta_squared_midpoint * d_lnk
-        Cl_new1.append(T_nu**2 * (4*np.pi) * As * integral_value)
+        Cl_new1.append((4*np.pi) * As * integral_value)
 
     # Add monopole term as 0 and shift values
     Cl_new1 = np.concatenate((Cl_new1, [0]))
@@ -58,12 +58,12 @@ def generate_poisson_fluctuations(Cl_avg0, delta_map, n_trials, N_total):
 
     Parameters:
         Cl_avg0 (np.ndarray): Theoretical Cℓ spectrum (including monopole and dipole).
-        delta_map (np.ndarray): Input fractional fluctuation map (δT/T).
+        delta_map (np.ndarray): Input fractional number-flux fluctuation map (Delta_tilde, eq. 2.32).
         n_trials (int): Number of Monte Carlo realizations.
         N_total (int): Total number of neutrino capture events.
 
     Returns:
-        maps_fluc_unscaled (np.ndarray): 2D array of unscaled fluctuated maps (δT/T).
+        maps_fluc_unscaled (np.ndarray): 2D array of unscaled fluctuated maps (Delta_tilde).
         cls_fluc (np.ndarray): Array of angular power spectra per trial.
         ratios_fluc (list): List of Cℓ / Cℓ_theory ratios for each trial (ℓ > 0).
     """
@@ -71,8 +71,8 @@ def generate_poisson_fluctuations(Cl_avg0, delta_map, n_trials, N_total):
     lmax = len(Cl_avg0) - 1
     ls = np.arange(1, lmax + 1)  # Exclude monopole (ℓ=0)
 
-    # Add monopole and convert to expected counts
-    map_wmono = N_total * (delta_map + 1.95)
+    # Add monopole (expected counts per pixel are proportional to 1 + Delta_tilde) and convert to expected counts
+    map_wmono = N_total * (delta_map + 1.)
 
     # Allocate arrays
     maps_fluc_scaled = np.empty((n_trials, n_pixels), dtype=np.float64)
@@ -85,7 +85,7 @@ def generate_poisson_fluctuations(Cl_avg0, delta_map, n_trials, N_total):
     for i in range(n_trials):
         sampled_map = rng.poisson(map_wmono)
         maps_fluc_scaled[i] = sampled_map
-        maps_fluc_unscaled[i] = (sampled_map / N_total - 1.95)
+        maps_fluc_unscaled[i] = (sampled_map / N_total - 1.)
 
     for m in maps_fluc_unscaled:
         cl = hp.anafast(m, lmax=lmax)

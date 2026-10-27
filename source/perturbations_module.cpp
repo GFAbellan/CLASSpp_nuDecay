@@ -7892,7 +7892,7 @@ int PerturbationsModule::perturb_print_variables_member(double tau, double* y, d
           }
         }
       } // end if (_FALSE_) - old Theta_n_q_l output
-          //NT - compute q-averaged temperature multipoles (eq. 2.32) for any NCDM species
+          //NT - compute q-averaged number-flux multipoles Delta_tilde_l (eq. 2.34) for any NCDM species
           {
             int q_size_loc = ppw->pv->q_size_ncdm[idx_n];
             for (index_l=0; index_l<=ppw->pv->l_max_ncdm[idx_n]; index_l++) {
@@ -7916,7 +7916,7 @@ int PerturbationsModule::perturb_print_variables_member(double tau, double* y, d
                 integral_num += weight * y[idx_loc+index_l];
                 integral_denom += weight;
               }
-              class_store_double(dataptr, integral_num/(3*integral_denom), _TRUE_, storeidx);
+              class_store_double(dataptr, integral_num/integral_denom, _TRUE_, storeidx);
             }
           } //NT
 
