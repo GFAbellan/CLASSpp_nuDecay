@@ -43,7 +43,7 @@ max_q_list = [15,     25,     40]         # maximum_q_ncdm_decay_dr per Gamma
 gtag_list  = ['g1000', 'g500', 'g250']   # file tags matching Cl_avg_OLD naming
 
 # Poisson fluctuation settings
-N_total  = int(1e5)
+N_total  = int(1e4)
 n_trials = 1000
 nside    = 128
 
@@ -240,7 +240,7 @@ ax.add_artist(leg1)
 leg2 = ax.legend(
     [Line2D([0], [0], color='lightgray', linewidth=4),
      Line2D([0], [0], color='gray',       linewidth=4)],
-    [r'Cosmic Variance', r'Counting statistics, $N=10^5$'],
+    [r'Cosmic Variance', r'Counting statistics, $N=10^4$'],
     loc='upper right', frameon=True,
     facecolor='white', edgecolor='black', framealpha=1.0)
 leg2.get_frame().set_linewidth(0.5)

@@ -40,7 +40,7 @@ n_bins_list = [35,     20,     20   ]   # N_momentum_bins_ncdm_decay_dr per Gamm
 gtag_list   = ['g1000', 'g300', 'g100']
 
 # Poisson fluctuation settings
-N_total, n_trials, nside = int(1e5), 1000, 128
+N_total, n_trials, nside = int(1e4), 1000, 128
 
 k_output_str = ", ".join(f"{k:.2e}" for k in k_values)
 
@@ -212,7 +212,7 @@ leg1 = ax.legend(frameon=False, loc=(0.01, 0.55)); ax.add_artist(leg1)
 leg2 = ax.legend(
     [Line2D([0],[0], color='lightgray', linewidth=4),
      Line2D([0],[0], color='gray',       linewidth=4)],
-    [r'Cosmic Variance', r'Counting statistics, $N=10^5$'],
+    [r'Cosmic Variance', r'Counting statistics, $N=10^4$'],
     loc='upper right', frameon=True, facecolor='white', edgecolor='black', framealpha=1.0)
 leg2.get_frame().set_linewidth(0.5)
 fig.tight_layout()
